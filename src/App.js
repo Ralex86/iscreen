@@ -5,6 +5,11 @@ import socketIOClient from 'socket.io-client';
 
 // import Carousel from './components/Carousel';
 import Slider from './components/Slider';
+import slide1 from './assets/1.jpg';
+import slide2 from './assets/2.jpg';
+import slide3 from './assets/3.jpg';
+import slide4 from './assets/4.jpg';
+import slide5 from './assets/5.jpg';
 
 class App extends React.Component {
   state = {
@@ -35,7 +40,7 @@ class App extends React.Component {
     });
 
     this.socket.on('slideIndex', data => {
-      const {index} = data;
+      // const {index} = data;
       console.log('iscreen', data);
       this.setState({slideIndex: data});
     });
@@ -68,13 +73,16 @@ class App extends React.Component {
   };
 
   getSlides = () => {
-    return [
-      <Slide>1</Slide>,
-      <Slide>2</Slide>,
-      <Slide>3</Slide>,
-      <Slide>4</Slide>,
-      <Slide>5</Slide>,
+    const slides = [
+      {id: 1, url: slide1},
+      {id: 2, url: slide2},
+      {id: 3, url: slide3},
+      {id: 4, url: slide4},
+      {id: 5, url: slide5},
     ];
+    return slides.map((slide, index) => (
+      <Slide key={index.toString()} slideBackground={slide.url} />
+    ));
   };
 
   render() {
@@ -110,9 +118,9 @@ class App extends React.Component {
 }
 
 const Slide = styled.div`
-  height: 200px;
-  width: 100px;
-  background-color: green;
+  height: 100%;
+  background-size: cover;
+  background-image: url(${props => props.slideBackground});
 `;
 
 const Monitoring = styled.div`

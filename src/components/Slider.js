@@ -15,7 +15,7 @@ class Slider extends React.Component<Props> {
     const slideWidth = 100 / slides.length;
     return slides.map((slide, index) => (
       <Slide slideWidth={slideWidth} key={index.toString()}>
-        {index}
+        {slide}
       </Slide>
     ));
   };
@@ -38,7 +38,7 @@ const Slide = styled.div`
 
   margin: 4px;
 
-  background-color: blue;
+  // background-color: blue;
 `;
 
 const Scene = styled.div`
