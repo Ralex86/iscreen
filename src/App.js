@@ -5,6 +5,7 @@ import socketIOClient from 'socket.io-client';
 
 // import Carousel from './components/Carousel';
 import Slider from './components/Slider';
+
 import slide1 from './assets/1.jpg';
 import slide2 from './assets/2.jpg';
 import slide3 from './assets/3.jpg';
@@ -24,7 +25,9 @@ class App extends React.Component {
     screenWidth: 0,
     screenHeight: 0,
     slideIndex: 0,
+    isPointerDisplayed: "false"
   };
+
 
   screenRef = React.createRef();
   endpoint = '/screen';
@@ -43,6 +46,10 @@ class App extends React.Component {
       // const {index} = data;
       console.log('iscreen', data);
       this.setState({slideIndex: data});
+    });
+
+    this.socket.on('display', data => {
+      this.setState({ isPointerDisplayed: data });
     });
   }
 
@@ -80,10 +87,12 @@ class App extends React.Component {
       {id: 4, url: slide4},
       {id: 5, url: slide5},
     ];
+
     return slides.map((slide, index) => (
       <Slide key={index.toString()} slideBackground={slide.url} />
     ));
   };
+
 
   render() {
     const {
@@ -95,6 +104,7 @@ class App extends React.Component {
       screenWidth,
       screenHeight,
       slideIndex,
+      isPointerDisplayed 
     } = this.state;
     const i_x = (screenWidth * x) / 200 + screenWidth / 2;
     const i_y = (screenHeight * y) / 200 + screenHeight / 2;
@@ -102,7 +112,7 @@ class App extends React.Component {
     return (
       <RootStyled>
         <Screen ref={this.screenRef}>
-          <Cursor x={i_x} y={i_y} />
+           {isPointerDisplayed && <Cursor x={i_x} y={i_y}> <Aim></Aim> </Cursor>}
           <Slider index={slideIndex} slides={this.getSlides()} />
         </Screen>
         <Monitoring>
@@ -110,7 +120,8 @@ class App extends React.Component {
           <span>beta: {beta}</span>
           <span>gamma: {gamma}</span>
           <span>x: {x.toFixed(2)}</span>
-          <span>y: {y.toFixed(2)}</span>
+          <span>y: {y.toFixed(2)}</span>  
+          <h2> {slideIndex}  </h2> 
         </Monitoring>
       </RootStyled>
     );
@@ -121,6 +132,9 @@ const Slide = styled.div`
   height: 100%;
   background-size: cover;
   background-image: url(${props => props.slideBackground});
+  border-radius:15px;
+  border: 1px solid #9999ff;
+  box-shadow: 2px 5px 5px #CCCCFF;
 `;
 
 const Monitoring = styled.div`
@@ -139,13 +153,28 @@ const Cursor = styled.div`
   z-index: 999;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
-  background: red;
+  width: 25px;
+  height: 25px;
+  background: black;
   border-radius: 100%;
   user-select: none;
   transform: ${props => `translate3d(${props.x}px,${props.y}px,0)`};
+  display:flex;
+  flex-direction: column;
+  justify-content:center;
 `;
+
+const Aim = styled.div`
+    position: relative;
+    width:15px;
+    height:15px;
+    margin: 0 auto;
+    border-radius: 100%;
+    background: #9999ff;
+`;
+
+
+
 
 const Screen = styled.div`
   display: flex;
@@ -156,7 +185,7 @@ const Screen = styled.div`
   width: calc(100% - 80px);
   height: calc(100% - 80px);
 
-  border: 5px solid #ccc;
+  //border: 5px solid #ccc;
   border-radius: 10px;
   box-sizing: border-box;
 `;
