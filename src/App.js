@@ -25,7 +25,7 @@ class App extends React.Component {
     screenWidth: 0,
     screenHeight: 0,
     slideIndex: 0,
-    isPointerDisplayed: "false"
+    isPointerDisplayed: false
   };
 
 
@@ -49,7 +49,7 @@ class App extends React.Component {
     });
 
     this.socket.on('display', data => {
-      this.setState({ isPointerDisplayed: data });
+      this.setState({ isPointerDisplayed: data.display });
     });
   }
 
