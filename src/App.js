@@ -11,6 +11,10 @@ import slide2 from './assets/2.jpg';
 import slide3 from './assets/3.jpg';
 import slide4 from './assets/4.jpg';
 import slide5 from './assets/5.jpg';
+import slide6 from './assets/6.jpg';
+import slide7 from './assets/7.jpg';
+import slide8 from './assets/8.jpg';
+import slide9 from './assets/9.jpg';
 
 class App extends React.Component {
   state = {
@@ -25,9 +29,8 @@ class App extends React.Component {
     screenWidth: 0,
     screenHeight: 0,
     slideIndex: 0,
-    isPointerDisplayed: false
+    isPointerDisplayed: false,
   };
-
 
   screenRef = React.createRef();
   endpoint = '/screen';
@@ -38,14 +41,14 @@ class App extends React.Component {
     window.addEventListener('resize', this.updateWindowDimensions);
 
     this.socket.on('position', data => {
-      const {alpha, beta, gamma, x, y} = data;
-      this.setState({alpha, beta, gamma, x, y});
+      const { alpha, beta, gamma, x, y } = data;
+      this.setState({ alpha, beta, gamma, x, y });
     });
 
     this.socket.on('slideIndex', data => {
       // const {index} = data;
       console.log('iscreen', data);
-      this.setState({slideIndex: data});
+      this.setState({ slideIndex: data });
     });
 
     this.socket.on('display', data => {
@@ -59,7 +62,7 @@ class App extends React.Component {
 
   updateScreenDimensions = () => {
     const {
-      current: {clientHeight, clientWidth},
+      current: { clientHeight, clientWidth },
     } = this.screenRef;
 
     this.setState({
@@ -81,18 +84,21 @@ class App extends React.Component {
 
   getSlides = () => {
     const slides = [
-      {id: 1, url: slide1},
-      {id: 2, url: slide2},
-      {id: 3, url: slide3},
-      {id: 4, url: slide4},
-      {id: 5, url: slide5},
+      { id: 1, url: slide1 },
+      { id: 2, url: slide2 },
+      { id: 3, url: slide3 },
+      { id: 4, url: slide4 },
+      { id: 5, url: slide5 },
+      { id: 6, url: slide6 },
+      { id: 7, url: slide7 },
+      { id: 8, url: slide8 },
+      { id: 9, url: slide9 },
     ];
 
     return slides.map((slide, index) => (
       <Slide key={index.toString()} slideBackground={slide.url} />
     ));
   };
-
 
   render() {
     const {
@@ -104,7 +110,7 @@ class App extends React.Component {
       screenWidth,
       screenHeight,
       slideIndex,
-      isPointerDisplayed 
+      isPointerDisplayed,
     } = this.state;
     const i_x = (screenWidth * x) / 200 + screenWidth / 2;
     const i_y = (screenHeight * y) / 200 + screenHeight / 2;
@@ -112,7 +118,11 @@ class App extends React.Component {
     return (
       <RootStyled>
         <Screen ref={this.screenRef}>
-           {isPointerDisplayed && <Cursor x={i_x} y={i_y}> <Aim></Aim> </Cursor>}
+          {isPointerDisplayed && (
+            <Cursor x={i_x} y={i_y}>
+              <Aim></Aim>
+            </Cursor>
+          )}
           <Slider index={slideIndex} slides={this.getSlides()} />
         </Screen>
         <Monitoring>
@@ -120,8 +130,8 @@ class App extends React.Component {
           <span>beta: {beta}</span>
           <span>gamma: {gamma}</span>
           <span>x: {x.toFixed(2)}</span>
-          <span>y: {y.toFixed(2)}</span>  
-          <h2> {slideIndex}  </h2> 
+          <span>y: {y.toFixed(2)}</span>
+          <h2> {slideIndex} </h2>
         </Monitoring>
       </RootStyled>
     );
@@ -132,9 +142,9 @@ const Slide = styled.div`
   height: 100%;
   background-size: cover;
   background-image: url(${props => props.slideBackground});
-  border-radius:15px;
+  border-radius: 15px;
   border: 1px solid #9999ff;
-  box-shadow: 2px 5px 5px #CCCCFF;
+  box-shadow: 2px 5px 5px #ccccff;
 `;
 
 const Monitoring = styled.div`
@@ -159,22 +169,19 @@ const Cursor = styled.div`
   border-radius: 100%;
   user-select: none;
   transform: ${props => `translate3d(${props.x}px,${props.y}px,0)`};
-  display:flex;
+  display: flex;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 `;
 
 const Aim = styled.div`
-    position: relative;
-    width:15px;
-    height:15px;
-    margin: 0 auto;
-    border-radius: 100%;
-    background: #9999ff;
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin: 0 auto;
+  border-radius: 100%;
+  background: #9999ff;
 `;
-
-
-
 
 const Screen = styled.div`
   display: flex;
